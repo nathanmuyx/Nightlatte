@@ -7,47 +7,8 @@ import { fadeInUp, staggerContainer } from "@/lib/animations";
 export function CaseStudyPreview() {
   return (
     <section className="bg-white px-6 py-16 md:py-24">
-      {/* Top image area */}
-      <div className="mx-auto max-w-[1440px]">
-        <div className="grid gap-6 md:grid-cols-[1.5fr_0.8fr]">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="h-[300px] overflow-hidden rounded-lg md:h-[432px]"
-            style={{
-              background: "linear-gradient(135deg, #312e81, #4c1d95, #6d28d9)",
-            }}
-          >
-            <div className="flex h-full items-center justify-center p-8">
-              <span className="text-sm font-medium text-white/50">
-                Typid — Event Platform Overview
-              </span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="hidden h-[432px] overflow-hidden rounded-lg md:block"
-            style={{
-              background: "linear-gradient(180deg, #4c1d95, #7c3aed, #a855f7)",
-            }}
-          >
-            <div className="flex h-full items-center justify-center p-8">
-              <span className="text-sm font-medium text-white/50">
-                Typid — Mobile View
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Heading + content */}
       <motion.div
-        className="mx-auto mt-16 max-w-[1140px]"
+        className="mx-auto max-w-[1140px]"
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
@@ -75,38 +36,13 @@ export function CaseStudyPreview() {
               From QR check-in to GCash payments &mdash; built for the
               Philippine market, validated by real organizers.
             </p>
-            <p className="mt-6 text-lg text-[#7b7d85]">
-              Read the full story in our{" "}
-              <Link href="/work/typid" className="text-[#323232] underline">
-                Typid Case Study
+            <div className="mt-8">
+              <Link
+                href="/typid"
+                className="inline-block rounded-[4px] bg-black px-6 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-80"
+              >
+                Read case study
               </Link>
-              .
-            </p>
-
-            {/* Partner/event images */}
-            <div className="mt-10 grid grid-cols-2 gap-4">
-              <div
-                className="flex h-[160px] items-center justify-center rounded-lg"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #7c3aed, #a855f7)",
-                }}
-              >
-                <span className="text-xs font-medium text-white/50">
-                  Himaya Event
-                </span>
-              </div>
-              <div
-                className="flex h-[160px] items-center justify-center rounded-lg"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #a855f7, #d946ef)",
-                }}
-              >
-                <span className="text-xs font-medium text-white/50">
-                  Aisen Fest
-                </span>
-              </div>
             </div>
           </motion.div>
         </div>

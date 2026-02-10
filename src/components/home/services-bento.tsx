@@ -1,15 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 
 export function ServicesBento() {
   return (
     <section
+      id="services"
       className="overflow-hidden px-6 py-24 md:py-32"
       style={{ background: "#f4f4f4" }}
     >
-      {/* Section heading — large like BS "AI at Bending Spoons" */}
+      {/* Section heading */}
       <motion.div
         className="mx-auto mb-16 max-w-[1440px] text-center"
         initial="hidden"
@@ -30,7 +32,7 @@ export function ServicesBento() {
         </motion.div>
       </motion.div>
 
-      {/* Bento grid — 4 cards matching BS layout (2 top, 1 wide, 2 bottom) */}
+      {/* Bento grid */}
       <motion.div
         className="mx-auto max-w-[860px]"
         variants={staggerContainer}
@@ -57,7 +59,7 @@ export function ServicesBento() {
             </p>
           </motion.div>
 
-          {/* Card 2 — Dashboards (dark card) */}
+          {/* Card 2 — Apps & Dashboards (dark card) */}
           <motion.div
             variants={fadeInUp}
             className="overflow-hidden rounded-lg p-10"
@@ -79,19 +81,43 @@ export function ServicesBento() {
             </p>
           </motion.div>
 
-          {/* Card 3 — wide card spanning both columns */}
+          {/* Card 3 — wide card with real analytics screenshot */}
           <motion.div
             variants={fadeInUp}
-            className="overflow-hidden rounded-lg md:col-span-2"
+            className="relative overflow-hidden rounded-lg md:col-span-2"
             style={{
               background:
-                "linear-gradient(135deg, #1e1b4b, #312e81, #4c1d95)",
+                "linear-gradient(135deg, #0a0a0a, #111827, #0a0a0a)",
             }}
           >
-            <div className="flex min-h-[200px] items-center justify-center p-10">
-              <span className="text-sm font-medium text-white/40">
-                Full-Stack Product Development Pipeline
-              </span>
+            <div className="absolute -left-[100px] top-[-60px]">
+              <div
+                className="h-[300px] w-[300px] rounded-full bg-[#17bff9]"
+                style={{ filter: "blur(60px)", opacity: 0.2 }}
+              />
+            </div>
+            <div className="relative flex min-h-[240px] items-center overflow-hidden">
+              <div className="relative z-10 flex-shrink-0 p-10">
+                <div className="text-[clamp(32px,4vw,48px)] font-normal leading-[0.9] tracking-[-0.04em] text-white">
+                  Full-Stack
+                </div>
+                <div className="mt-1 text-[clamp(16px,2vw,24px)] font-medium text-white/60">
+                  Product Pipeline
+                </div>
+                <p className="mt-3 max-w-[240px] text-sm leading-[1.6] text-white/40">
+                  From Figma to production &mdash; no handoff gaps, no lost context
+                </p>
+              </div>
+              <div className="relative ml-auto hidden h-[240px] w-[55%] md:block">
+                <Image
+                  src="/images/typid-analytics.png"
+                  alt="Analytics dashboard"
+                  fill
+                  className="object-cover object-left-top opacity-60"
+                  sizes="480px"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-transparent to-transparent" />
+              </div>
             </div>
           </motion.div>
 
@@ -117,7 +143,7 @@ export function ServicesBento() {
             </p>
           </motion.div>
 
-          {/* Card 5 — Strategy (light card) */}
+          {/* Card 5 — End to End (light card) */}
           <motion.div
             variants={fadeInUp}
             className="overflow-hidden rounded-lg bg-gradient-to-b from-white to-[#e0e2ea] p-10"
@@ -136,21 +162,6 @@ export function ServicesBento() {
           </motion.div>
         </div>
       </motion.div>
-
-      {/* Link */}
-      <motion.p
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeInUp}
-        className="mt-10 text-center text-lg text-[#7b7d85]"
-      >
-        Learn more about our approach in{" "}
-        <a href="/services" className="text-[#323232] underline">
-          Services
-        </a>
-        .
-      </motion.p>
     </section>
   );
 }

@@ -117,7 +117,7 @@ export function MockupsSection() {
         </motion.p>
         <motion.p variants={fadeInUp} className="mt-4 text-[#7b7d85] text-lg">
           Discover some of our{" "}
-          <a href="/work" className="text-[#323232] underline">
+          <a href="#work" className="text-[#323232] underline">
             Work
           </a>
           .

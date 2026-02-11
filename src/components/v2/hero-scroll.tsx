@@ -8,8 +8,6 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { V2Navbar } from "./v2-navbar";
-
 /* ------------------------------------------------------------------ */
 /*  Animated card — uses transform only (no layout props)              */
 /* ------------------------------------------------------------------ */
@@ -110,8 +108,6 @@ export function HeroScroll() {
             transform: "scale(var(--hero-scale, 1))",
           }}
         >
-          <V2Navbar />
-
           {/* Cards layer */}
           <motion.div
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform"

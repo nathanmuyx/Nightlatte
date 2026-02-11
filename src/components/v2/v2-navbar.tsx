@@ -23,12 +23,12 @@ export function V2Navbar() {
     <header className="fixed top-6 left-0 right-0 z-50 flex justify-center px-6">
       <nav
         className={cn(
-          "flex h-[56px] items-center gap-8 rounded-full bg-[#171717] px-8",
+          "flex items-center gap-10 rounded-full bg-[#171717] px-8 py-5",
           "border border-white/[0.06]"
         )}
       >
         {/* Left links — desktop */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-8 md:flex">
           {navLinksLeft.map((link) => (
             <Link
               key={link.href}
@@ -40,13 +40,24 @@ export function V2Navbar() {
           ))}
         </div>
 
-        {/* Diamond logo */}
+        {/* Logo */}
         <Link href="/v2" className="flex items-center justify-center">
-          <div className="h-[40px] w-[40px] rotate-45 rounded-[6px] bg-white" />
+          <svg
+            width="100"
+            height="50"
+            viewBox="0 0 100 50"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 25C0 38.8071 11.1929 50 25 50V25C25 38.8071 36.1929 50 50 50V25C50 38.8071 61.1929 50 75 50C88.8071 50 100 38.8071 100 25C100 11.1929 88.8071 0 75 0C61.1929 0 50 11.1929 50 25V0C36.1929 0 25 11.1929 25 25V0C11.1929 0 0 11.1929 0 25Z"
+              fill="white"
+            />
+          </svg>
         </Link>
 
         {/* Right links — desktop */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-8 md:flex">
           {navLinksRight.map((link) => (
             <Link
               key={link.href}

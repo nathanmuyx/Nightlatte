@@ -190,6 +190,14 @@
   background-clip: text;
 }
 
+/* Pink-to-blue gradient for "Maybe." */
+.gradient-text-maybe {
+  background: linear-gradient(to right, #a3008d, #0028ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .glass {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(12px);
@@ -199,6 +207,20 @@
 .glass-hover:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Hero responsive scale — pure CSS, no JS re-renders */
+:root {
+  --hero-scale: 1;
+}
+@media (max-width: 1023px) {
+  :root { --hero-scale: 0.8; }
+}
+@media (max-width: 767px) {
+  :root { --hero-scale: 0.6; }
+}
+@media (max-width: 479px) {
+  :root { --hero-scale: 0.45; }
 }
 
 @media (prefers-reduced-motion: reduce) {

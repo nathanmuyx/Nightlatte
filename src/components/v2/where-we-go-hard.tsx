@@ -61,7 +61,12 @@ function DesktopCards() {
 
     cancelAnimationFrame(rafId.current);
     rafId.current = requestAnimationFrame(() => {
-      el.style.transform = `translate(${e.clientX - 40}px, ${e.clientY - 100}px)`;
+      const floaterW = 511;
+      // Flip floater to the left of cursor when it would overflow right edge
+      const x = e.clientX + floaterW + 40 > window.innerWidth
+        ? e.clientX - floaterW - 40
+        : e.clientX - 40;
+      el.style.transform = `translate(${x}px, ${e.clientY - 100}px)`;
     });
   }, []);
 

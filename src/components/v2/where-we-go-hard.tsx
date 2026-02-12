@@ -53,6 +53,7 @@ function DesktopCards() {
   const floaterRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const rafId = useRef(0);
+  const sideRef = useRef<"left" | "right">("left");
   const viewportScale = useViewportScale(1920, { min: 0.4 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -62,9 +63,9 @@ function DesktopCards() {
     cancelAnimationFrame(rafId.current);
     rafId.current = requestAnimationFrame(() => {
       const floaterW = 511;
-      // Flip floater to the left of cursor when it would overflow right edge
-      const x = e.clientX + floaterW + 40 > window.innerWidth
-        ? e.clientX - floaterW - 40
+      // Right-side cards: cursor at top-right, floater extends left
+      const x = sideRef.current === "right"
+        ? e.clientX - floaterW + 40
         : e.clientX - 40;
       el.style.transform = `translate(${x}px, ${e.clientY - 100}px)`;
     });
@@ -99,7 +100,7 @@ function DesktopCards() {
                     : 0.4,
               transition: "opacity 0.3s ease",
             }}
-            onMouseEnter={() => setHoveredIndex(i)}
+            onMouseEnter={() => { setHoveredIndex(i); sideRef.current = i >= 2 ? "right" : "left"; }}
             onMouseLeave={() => setHoveredIndex(null)}
           >
             <p
@@ -133,7 +134,7 @@ function DesktopCards() {
       {/* Floating cursor follower — fixed so it's never clipped by overflow */}
       <div
         ref={floaterRef}
-        className="pointer-events-none fixed left-0 top-0 z-[100] flex flex-col items-start gap-[34px] will-change-transform"
+        className={`pointer-events-none fixed left-0 top-0 z-[100] flex flex-col gap-[34px] will-change-transform ${hoveredIndex !== null && hoveredIndex >= 2 ? "items-end" : "items-start"}`}
         style={{
           opacity: hoveredIndex !== null ? 1 : 0,
           transition: "opacity 0.2s ease",

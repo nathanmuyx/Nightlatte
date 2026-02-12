@@ -55,15 +55,11 @@ function DesktopCards() {
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const el = floaterRef.current;
-    const section = sectionRef.current;
-    if (!el || !section) return;
+    if (!el) return;
 
     cancelAnimationFrame(rafId.current);
     rafId.current = requestAnimationFrame(() => {
-      const rect = section.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      el.style.transform = `translate(${x - 40}px, ${y - 100}px)`;
+      el.style.transform = `translate(${e.clientX - 40}px, ${e.clientY - 100}px)`;
     });
   }, []);
 
@@ -126,10 +122,10 @@ function DesktopCards() {
         ))}
       </div>
 
-      {/* Floating cursor follower */}
+      {/* Floating cursor follower — fixed so it's never clipped by overflow */}
       <div
         ref={floaterRef}
-        className="pointer-events-none absolute left-0 top-0 z-50 flex flex-col items-start gap-[34px] will-change-transform"
+        className="pointer-events-none fixed left-0 top-0 z-[100] flex flex-col items-start gap-[34px] will-change-transform"
         style={{
           opacity: hoveredIndex !== null ? 1 : 0,
           transition: "opacity 0.2s ease",
@@ -243,7 +239,7 @@ function MobileCards() {
 /* ------------------------------------------------------------------ */
 export function WhereWeGoHard() {
   return (
-    <div className="bg-black">
+    <div>
       {/* ── Title section ── */}
       <section className="relative flex h-[60vh] items-center justify-center overflow-hidden md:h-[100vh]">
         <p

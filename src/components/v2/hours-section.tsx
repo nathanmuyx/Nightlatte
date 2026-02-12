@@ -280,11 +280,11 @@ export function HoursSection() {
   const bodyY = useTransform(bodyProgress, [0, 0.6, 1], ["100px", "0px", "0px"]);
   const bodyOpacity = useTransform(bodyProgress, [0, 0.5, 1], [0, 1, 1]);
 
-  /* Background: black → white — transition happens in last 40% */
+  /* Background: transparent (LiquidEther shows through) → white */
   const bgColor = useTransform(
     scrollYProgress,
     [0, 0.55, 0.85],
-    ["rgb(11,11,11)", "rgb(11,11,11)", "rgb(255,255,255)"]
+    ["rgba(255,255,255,0)", "rgba(255,255,255,0)", "rgba(255,255,255,1)"]
   );
 
   /* "72 hours" white text — fades out during the transition */

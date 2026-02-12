@@ -49,10 +49,8 @@ export function HeroScroll() {
     target: sectionRef,
     offset: ["start start", "end end"],
   });
-  const [LiquidEther, setLiquidEther] = useState<React.ComponentType<any> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    import("@/components/LiquidEther").then((mod) => setLiquidEther(() => mod.default));
     const mq = window.matchMedia("(max-width: 768px)");
     setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
@@ -97,30 +95,7 @@ export function HeroScroll() {
 
   return (
     <section ref={sectionRef} className="relative h-[150vh] md:h-[300vh]">
-      <div className="sticky top-0 h-screen bg-[#0b0b0b]">
-        {/* LiquidEther WebGL background */}
-        {LiquidEther && (
-          <div className="absolute inset-0 z-0">
-            <LiquidEther
-              colors={["#ffffff", "#000000", "#000000"]}
-              mouseForce={15}
-              cursorSize={150}
-              isViscous
-              viscous={50}
-              iterationsViscous={16}
-              iterationsPoisson={16}
-              resolution={0.35}
-              isBounce={false}
-              dt={0.016}
-              autoDemo
-              autoSpeed={0.3}
-              autoIntensity={1.8}
-              takeoverDuration={0.25}
-              autoResumeDelay={500}
-              autoRampDuration={0.6}
-            />
-          </div>
-        )}
+      <div className="sticky top-0 h-screen">
         {/* Responsive scale wrapper — CSS only, no JS re-renders */}
         <div
           className="relative flex h-full w-full items-center justify-center"

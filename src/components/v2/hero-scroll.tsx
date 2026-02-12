@@ -60,8 +60,8 @@ export function HeroScroll() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  // On mobile, cap animation at 70% of desktop so cards stay partially spread
-  const p = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0.7 : 1]);
+  // On mobile, cap animation at 40% of desktop (phase 1 only — cards unstack, no growth)
+  const p = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0.4 : 1]);
 
   /* ---- Card transforms (GPU only: translate, rotate, scale) ---- */
 

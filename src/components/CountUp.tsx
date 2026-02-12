@@ -10,6 +10,7 @@ interface CountUpProps {
   className?: string;
   startWhen?: boolean;
   separator?: string;
+  waypoints?: number[];
   onStart?: () => void;
   onEnd?: () => void;
 }
@@ -23,6 +24,7 @@ export default function CountUp({
   className = '',
   startWhen = true,
   separator = '',
+  waypoints,
   onStart,
   onEnd
 }: CountUpProps) {
@@ -69,17 +71,53 @@ export default function CountUp({
     [maxDecimals, separator]
   );
 
+  // Initial display value
   useEffect(() => {
     if (ref.current) {
-      ref.current.textContent = formatValue(direction === 'down' ? to : from);
-    }
-  }, [from, to, direction, formatValue]);
-
-  useEffect(() => {
-    if (isInView && startWhen) {
-      if (typeof onStart === 'function') {
-        onStart();
+      if (waypoints && waypoints.length > 0) {
+        ref.current.textContent = formatValue(waypoints[0]);
+      } else {
+        ref.current.textContent = formatValue(direction === 'down' ? to : from);
       }
+    }
+  }, [from, to, direction, formatValue, waypoints]);
+
+  // Waypoints mode: fast jumps then real countdown
+  useEffect(() => {
+    if (!waypoints || waypoints.length === 0) return;
+    if (!isInView || !startWhen) return;
+
+    if (typeof onStart === 'function') onStart();
+
+    let cancelled = false;
+
+    const run = async () => {
+      await new Promise((r) => setTimeout(r, delay * 1000));
+      if (cancelled) return;
+
+      for (let i = 1; i < waypoints.length; i++) {
+        if (cancelled) return;
+        const gap = Math.abs(waypoints[i] - waypoints[i - 1]);
+        // Big jumps: fast (50ms), real countdown: slower (45ms)
+        const ms = gap > 10 ? 50 : 45;
+        await new Promise((r) => setTimeout(r, ms));
+        if (cancelled) return;
+        if (ref.current) ref.current.textContent = formatValue(waypoints[i]);
+      }
+
+      if (typeof onEnd === 'function') onEnd();
+    };
+
+    run();
+    return () => { cancelled = true; };
+  }, [isInView, startWhen, waypoints, delay, formatValue, onStart, onEnd]);
+
+  // Spring mode: original behavior (when no waypoints)
+  useEffect(() => {
+    if (waypoints && waypoints.length > 0) return;
+
+    if (isInView && startWhen) {
+      if (typeof onStart === 'function') onStart();
 
       const timeoutId = setTimeout(() => {
         motionValue.set(direction === 'down' ? from : to);
@@ -87,9 +125,7 @@ export default function CountUp({
 
       const durationTimeoutId = setTimeout(
         () => {
-          if (typeof onEnd === 'function') {
-            onEnd();
-          }
+          if (typeof onEnd === 'function') onEnd();
         },
         delay * 1000 + duration * 1000
       );
@@ -99,9 +135,11 @@ export default function CountUp({
         clearTimeout(durationTimeoutId);
       };
     }
-  }, [isInView, startWhen, motionValue, direction, from, to, delay, onStart, onEnd, duration]);
+  }, [isInView, startWhen, motionValue, direction, from, to, delay, onStart, onEnd, duration, waypoints]);
 
   useEffect(() => {
+    if (waypoints && waypoints.length > 0) return;
+
     const unsubscribe = springValue.on('change', (latest: number) => {
       if (ref.current) {
         ref.current.textContent = formatValue(latest);
@@ -109,7 +147,7 @@ export default function CountUp({
     });
 
     return () => unsubscribe();
-  }, [springValue, formatValue]);
+  }, [springValue, formatValue, waypoints]);
 
   return <span className={className} ref={ref} />;
 }

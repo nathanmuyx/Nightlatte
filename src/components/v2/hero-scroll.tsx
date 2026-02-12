@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -49,23 +49,33 @@ export function HeroScroll() {
     target: sectionRef,
     offset: ["start start", "end end"],
   });
+  const [LiquidEther, setLiquidEther] = useState<React.ComponentType<any> | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    import("@/components/LiquidEther").then((mod) => setLiquidEther(() => mod.default));
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   /* ---- Card transforms (GPU only: translate, rotate, scale) ---- */
 
   const cardsY = useTransform(scrollYProgress, [0, 0.5, 1], [-60, -60, -40]);
 
-  const card1X = useTransform(scrollYProgress, [0, 0.5, 1], [0, -324, -460]);
+  // Mobile: cards animate over full range to slight spread. Desktop: two-phase spread.
+  const card1X = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5, 1], isMobile ? [0, -120] : [0, -324, -460]);
   const card2X = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0, 0]);
-  const card3X = useTransform(scrollYProgress, [0, 0.5, 1], [0, 324, 460]);
+  const card3X = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5, 1], isMobile ? [0, 120] : [0, 324, 460]);
 
-  const card1Rotate = useTransform(scrollYProgress, [0, 0.5], [-8, 0]);
-  const card2Rotate = useTransform(scrollYProgress, [0, 0.5], [-24, 0]);
+  const card1Rotate = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5], [-8, 0]);
+  const card2Rotate = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5], [-24, 0]);
   const card3Rotate = useTransform(scrollYProgress, [0, 0.5], [0, 0]);
 
-  // Card size: 300×300 → 416×504
-  const cardW = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, 416]);
-  const cardH = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, 504]);
-  // Keep cards centered: margin = -width/2, -height/2
+  // Mobile: cards stay 300×300. Desktop: grow to 416×504.
+  const cardW = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, isMobile ? 300 : 416]);
+  const cardH = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, isMobile ? 300 : 504]);
   const cardML = useTransform(cardW, (w) => -w / 2);
   const cardMT = useTransform(cardH, (h) => -h / 2);
 
@@ -73,39 +83,51 @@ export function HeroScroll() {
   const card2Z = useTransform(scrollYProgress, [0, 0.25, 0.3], [2, 2, 3]);
   const card3Z = useTransform(scrollYProgress, [0, 0.3], [3, 3]);
 
-  /* ---- Text transforms (GPU only: translate, scale, opacity) ---- */
+  /* ---- Text transforms ---- */
 
-  const textY = useTransform(scrollYProgress, [0, 0.5, 1], [240, 240, -80]);
-
-  const titleBuildX = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [0, -540, -540]
-  );
-  const titleShipX = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [0, 540, 540]
-  );
-
-  // Scale text instead of animating fontSize (77→34 = 0.44x)
-  const titleScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.44]);
-  // Script font size: 88→224 (animated via fontSize, not scale, for subpixel antialiasing)
-  const scriptFontSize = useTransform(scrollYProgress, [0, 0.5], [88, 224]);
-
-  const textOpacity = useTransform(scrollYProgress, [0.5, 1], [1, 0.3]);
-  const textBlurPx = useTransform(scrollYProgress, [0.5, 1], [0, 6]);
+  // Mobile: no text animation at all. Desktop: full animation.
+  const textY = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [240, 240, 240] : [240, 240, -80]);
+  const titleBuildX = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [0, 0, 0] : [0, -540, -540]);
+  const titleShipX = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [0, 0, 0] : [0, 540, 540]);
+  const titleScale = useTransform(scrollYProgress, [0, 0.5], isMobile ? [1, 1] : [1, 0.44]);
+  const scriptFontSize = useTransform(scrollYProgress, [0, 0.5], isMobile ? [88, 88] : [88, 224]);
+  const textOpacity = useTransform(scrollYProgress, [0.5, 1], isMobile ? [1, 1] : [1, 0.3]);
+  const textBlurPx = useTransform(scrollYProgress, [0.5, 1], isMobile ? [0, 0] : [0, 6]);
   const textFilter = useTransform(textBlurPx, (v) => `blur(${v}px)`);
 
   return (
-    <section ref={sectionRef} className="relative h-[300vh]">
+    <section ref={sectionRef} className="relative h-[150vh] md:h-[300vh]">
       <div className="sticky top-0 h-screen bg-[#0b0b0b]">
+        {/* LiquidEther WebGL background */}
+        {LiquidEther && (
+          <div className="absolute inset-0 z-0">
+            <LiquidEther
+              colors={["#ffffff", "#000000", "#000000"]}
+              mouseForce={15}
+              cursorSize={150}
+              isViscous
+              viscous={50}
+              iterationsViscous={16}
+              iterationsPoisson={16}
+              resolution={0.35}
+              isBounce={false}
+              dt={0.016}
+              autoDemo
+              autoSpeed={0.3}
+              autoIntensity={1.8}
+              takeoverDuration={0.25}
+              autoResumeDelay={500}
+              autoRampDuration={0.6}
+            />
+          </div>
+        )}
         {/* Responsive scale wrapper — CSS only, no JS re-renders */}
         <div
           className="relative flex h-full w-full items-center justify-center"
           style={{
-            /* Scale entire scene based on viewport width */
-            transform: "scale(var(--hero-scale, 1))",
+            /* Scale entire scene proportionally to viewport width.
+               Designed at 1400px — below that, shrink everything uniformly. */
+            transform: "scale(clamp(0.3, 100vw / 1400, 1))",
           }}
         >
           {/* Cards layer */}

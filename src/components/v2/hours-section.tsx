@@ -9,6 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import CountUp from "@/components/CountUp";
+import { V2Footer } from "@/components/v2/v2-footer";
 
 const topRowImages = [
   { src: "/images/mockup-top-1.png", alt: "Mobile app showcase", w: 208, h: 260, border: "rgba(195,228,165,0.4)" },
@@ -108,6 +109,8 @@ function MarqueeRow({
       >
         {renderImages("a")}
         {renderImages("b")}
+        {renderImages("c")}
+        {renderImages("d")}
       </div>
     </div>
   );
@@ -117,57 +120,143 @@ function MarqueeRow({
 /*  Footer: Mockup showcase with goonsdesign.com-style marquee         */
 /* ------------------------------------------------------------------ */
 function MockupShowcase() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end end"],
+  });
+
+  /*
+   * With a 300vh container and offset ["start end", "end end"]:
+   *   0.00 = top of container at bottom of viewport (just entering)
+   *   ~0.33 = top of container at top of viewport (sticky kicks in)
+   *   1.00 = bottom of container at bottom of viewport (sticky releases)
+   *
+   * Timeline:
+   *   0.00–0.35  Background white → black
+   *   0.25–0.55  Mockup rows slide in, text fades in
+   *   0.55–1.00  Everything settled → sticky unpins, normal scroll
+   */
+
+  /* Background: white → black */
+  const bgColor = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.4, 1],
+    ["rgb(255,255,255)", "rgb(255,255,255)", "rgb(0,0,0)", "rgb(0,0,0)"]
+  );
+
+  /* Headline color: dim spotlight → bright black → white (single rgba transform) */
+  const headlineColor = useTransform(
+    scrollYProgress,
+    [0, 0.12, 0.22, 0.45, 1],
+    [
+      "rgba(0,0,0,0.15)",   // dim spotlight (matches SpotlightParagraph)
+      "rgba(0,0,0,0.15)",   // hold dim
+      "rgba(0,0,0,1)",      // brighten to full black early
+      "rgba(255,255,255,1)", // transition to white as bg goes black
+      "rgba(255,255,255,1)", // hold white
+    ]
+  );
+
+  /* Text vertical position: starts near top (continuing paragraph flow) → glides to center */
+  const textY = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.4, 1],
+    ["-30vh", "-30vh", "0vh", "0vh"]
+  );
+
+  /* "consider it done" + CTA: hidden until bg is black, then fades in */
+  const ctaOpacity = useTransform(scrollYProgress, [0.4, 0.55, 1], [0, 1, 1]);
+  const ctaVisibility = useTransform(scrollYProgress, (v: number) =>
+    v < 0.4 ? "hidden" as const : "visible" as const
+  );
+
+  /* Top marquee row: slides down from above → hold */
+  const topY = useTransform(scrollYProgress, [0.35, 0.55, 1], ["-100%", "0%", "0%"]);
+  const topOpacity = useTransform(scrollYProgress, [0.35, 0.55, 1], [0, 1, 1]);
+
+  /* Bottom marquee row: slides up from below → hold */
+  const botY = useTransform(scrollYProgress, [0.35, 0.55, 1], ["100%", "0%", "0%"]);
+  const botOpacity = useTransform(scrollYProgress, [0.35, 0.55, 1], [0, 1, 1]);
+
   return (
-    <section className="relative bg-black overflow-hidden">
-      <div className="flex flex-col items-center gap-12 py-20">
-        {/* Top row — scrolls left */}
-        <MarqueeRow images={topRowImages} direction="left" duration={25} />
+    <section ref={containerRef} className="relative h-[300vh]">
+      <motion.div
+        className="sticky top-0 h-screen overflow-hidden"
+        style={{ backgroundColor: bgColor }}
+      >
+        {/* Top row — absolute at top, slides down from above */}
+        <motion.div
+          className="absolute top-0 left-0 right-0 z-10 py-8"
+          style={{ y: topY, opacity: topOpacity }}
+        >
+          <MarqueeRow images={topRowImages} direction="left" duration={25} />
+        </motion.div>
 
-        {/* CTA */}
-        <div className="flex flex-col items-center gap-[34px] py-12 text-white">
-          <div className="flex flex-col items-center gap-[14px]">
-            <p
-              className="uppercase text-center"
-              style={{
-                fontFamily: "var(--font-switzer)",
-                fontWeight: 500,
-                fontSize: "clamp(24px, 3.9vw, 56px)",
-                lineHeight: 1.12,
-                letterSpacing: "-0.04em",
-              }}
-            >
-              An impossible deadline?
-            </p>
-            <p
-              className="text-center"
-              style={{
-                fontFamily: "var(--font-pencerio)",
-                fontWeight: 100,
-                fontSize: "clamp(40px, 6.1vw, 88px)",
-                lineHeight: 0.9,
-              }}
-            >
-              consider it done
-            </p>
+        {/* Center content — headline + CTA with position animation */}
+        <motion.div
+          className="relative z-20 flex h-full flex-col items-center justify-center"
+          style={{ y: textY }}
+        >
+          <div className="flex flex-col items-center gap-[34px]">
+            <div className="flex flex-col items-center gap-[14px]">
+              {/* "An impossible deadline?" — visible from start as spotlight */}
+              <motion.p
+                className="uppercase text-center"
+                style={{
+                  color: headlineColor,
+                  fontFamily: "var(--font-switzer)",
+                  fontWeight: 500,
+                  fontSize: "clamp(24px, 3.9vw, 56px)",
+                  lineHeight: 1.12,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                An impossible deadline?
+              </motion.p>
+
+              {/* "consider it done" + CTA — fades in during black phase */}
+              <motion.p
+                className="text-center text-white"
+                style={{
+                  opacity: ctaOpacity,
+                  visibility: ctaVisibility,
+                  fontFamily: "var(--font-pencerio)",
+                  fontWeight: 100,
+                  fontSize: "clamp(40px, 6.1vw, 88px)",
+                  lineHeight: 0.9,
+                  padding: "0.2em 0.5em 0.3em",
+                }}
+              >
+                consider it done
+              </motion.p>
+            </div>
+
+            <motion.div style={{ opacity: ctaOpacity, visibility: ctaVisibility }}>
+              <Link
+                href="#contact"
+                className="rounded-full bg-white px-8 py-5 text-black uppercase"
+                style={{
+                  fontFamily: "var(--font-switzer)",
+                  fontWeight: 500,
+                  fontSize: 17,
+                  lineHeight: 1,
+                }}
+              >
+                Book a Call
+              </Link>
+            </motion.div>
           </div>
+        </motion.div>
 
-          <Link
-            href="#contact"
-            className="rounded-full bg-white px-8 py-5 text-black uppercase"
-            style={{
-              fontFamily: "var(--font-switzer)",
-              fontWeight: 500,
-              fontSize: 17,
-              lineHeight: 1,
-            }}
-          >
-            Book a Call
-          </Link>
-        </div>
-
-        {/* Bottom row — scrolls right */}
-        <MarqueeRow images={botRowImages} direction="right" duration={30} />
-      </div>
+        {/* Bottom row — absolute at bottom, slides up from below */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 z-10 py-8"
+          style={{ y: botY, opacity: botOpacity }}
+        >
+          <MarqueeRow images={botRowImages} direction="right" duration={30} />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
@@ -177,10 +266,19 @@ function MockupShowcase() {
 /* ------------------------------------------------------------------ */
 export function HoursSection() {
   const heroRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end end"],
   });
+
+  /* Body text: slides up from below during the white transition */
+  const { scrollYProgress: bodyProgress } = useScroll({
+    target: bodyRef,
+    offset: ["start end", "start 0.85"],
+  });
+  const bodyY = useTransform(bodyProgress, [0, 0.6, 1], ["100px", "0px", "0px"]);
+  const bodyOpacity = useTransform(bodyProgress, [0, 0.5, 1], [0, 1, 1]);
 
   /* Background: black → white — transition happens in last 40% */
   const bgColor = useTransform(
@@ -218,7 +316,18 @@ export function HoursSection() {
                   letterSpacing: "-0.15em",
                 }}
               >
-                <CountUp to={1000} from={72} duration={1.2} direction="down" />
+                <CountUp
+                  to={1000}
+                  from={72}
+                  duration={0.5}
+                  direction="down"
+                  waypoints={[
+                    1000, 847, 723, 618, 491, 385, 264, 158,
+                    99, 98, 97, 96, 95, 94, 93, 92, 91, 90,
+                    89, 88, 87, 86, 85, 84, 83, 82, 81, 80,
+                    79, 78, 77, 76, 75, 74, 73, 72,
+                  ]}
+                />
               </span>
               <span
                 className="block text-center"
@@ -251,8 +360,11 @@ export function HoursSection() {
       </section>
 
       {/* ── Body text on white ── */}
-      <section className="relative bg-white">
-        <div className="mx-auto max-w-[1024px] px-6 py-[10vh]">
+      <section ref={bodyRef} className="relative z-10 bg-white" style={{ marginTop: "-40vh" }}>
+        <motion.div
+          className="mx-auto max-w-[1024px] px-6 pt-[10vh] pb-[5vh]"
+          style={{ y: bodyY, opacity: bodyOpacity }}
+        >
           <div className="flex flex-col gap-[72px]">
             <SpotlightParagraph>
               <p
@@ -290,11 +402,14 @@ export function HoursSection() {
               </p>
             </SpotlightParagraph>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* ── Footer: Mockups on black with marquee ── */}
+      {/* ── Mockup reveal: white spotlight → black with marquee ── */}
       <MockupShowcase />
+
+      {/* ── Footer ── */}
+      <V2Footer />
     </>
   );
 }

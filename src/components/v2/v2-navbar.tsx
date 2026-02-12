@@ -23,7 +23,7 @@ export function V2Navbar() {
     <header className="fixed top-6 left-0 right-0 z-50 flex justify-center px-6">
       <nav
         className={cn(
-          "flex items-center gap-10 rounded-full bg-[#171717] px-8 py-5",
+          "flex items-center gap-6 rounded-full bg-[#171717] px-5 py-3",
           "border border-white/[0.06]"
         )}
       >
@@ -33,7 +33,7 @@ export function V2Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[17px] font-medium uppercase tracking-[-0.34px] text-white/80 transition-colors hover:text-white"
+              className="text-[12px] font-medium uppercase tracking-[-0.34px] text-white/80 transition-colors hover:text-white"
             >
               {link.label}
             </Link>
@@ -43,8 +43,8 @@ export function V2Navbar() {
         {/* Logo */}
         <Link href="/v2" className="flex items-center justify-center">
           <svg
-            width="100"
-            height="50"
+            width="60"
+            height="30"
             viewBox="0 0 100 50"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,7 @@ export function V2Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[17px] font-medium uppercase tracking-[-0.34px] text-white/80 transition-colors hover:text-white"
+              className="text-[12px] font-medium uppercase tracking-[-0.34px] text-white/80 transition-colors hover:text-white"
             >
               {link.label}
             </Link>

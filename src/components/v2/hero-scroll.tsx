@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -8,6 +8,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import { useViewportScale } from "@/hooks/use-viewport-scale";
 /* ------------------------------------------------------------------ */
 /*  Animated card — uses transform only (no layout props)              */
 /* ------------------------------------------------------------------ */
@@ -49,31 +50,22 @@ export function HeroScroll() {
     target: sectionRef,
     offset: ["start start", "end end"],
   });
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
+  const viewportScale = useViewportScale(1920, { min: 0.5, designHeight: 1200 });
 
   /* ---- Card transforms (GPU only: translate, rotate, scale) ---- */
 
   const cardsY = useTransform(scrollYProgress, [0, 0.5, 1], [-60, -60, -40]);
 
-  // Mobile: cards animate over full range to slight spread. Desktop: two-phase spread.
-  const card1X = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5, 1], isMobile ? [0, -120] : [0, -324, -460]);
+  const card1X = useTransform(scrollYProgress, [0, 0.5, 1], [0, -324, -460]);
   const card2X = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0, 0]);
-  const card3X = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5, 1], isMobile ? [0, 120] : [0, 324, 460]);
+  const card3X = useTransform(scrollYProgress, [0, 0.5, 1], [0, 324, 460]);
 
-  const card1Rotate = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5], [-8, 0]);
-  const card2Rotate = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.5], [-24, 0]);
+  const card1Rotate = useTransform(scrollYProgress, [0, 0.5], [-8, 0]);
+  const card2Rotate = useTransform(scrollYProgress, [0, 0.5], [-24, 0]);
   const card3Rotate = useTransform(scrollYProgress, [0, 0.5], [0, 0]);
 
-  // Mobile: cards stay 300×300. Desktop: grow to 416×504.
-  const cardW = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, isMobile ? 300 : 416]);
-  const cardH = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, isMobile ? 300 : 504]);
+  const cardW = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, 416]);
+  const cardH = useTransform(scrollYProgress, [0, 0.5, 1], [300, 300, 504]);
   const cardML = useTransform(cardW, (w) => -w / 2);
   const cardMT = useTransform(cardH, (h) => -h / 2);
 
@@ -83,26 +75,23 @@ export function HeroScroll() {
 
   /* ---- Text transforms ---- */
 
-  // Mobile: no text animation at all. Desktop: full animation.
-  const textY = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [240, 240, 240] : [240, 240, -80]);
-  const titleBuildX = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [0, 0, 0] : [0, -540, -540]);
-  const titleShipX = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [0, 0, 0] : [0, 540, 540]);
-  const titleScale = useTransform(scrollYProgress, [0, 0.5], isMobile ? [1, 1] : [1, 0.44]);
-  const scriptFontSize = useTransform(scrollYProgress, [0, 0.5], isMobile ? [88, 88] : [88, 224]);
-  const textOpacity = useTransform(scrollYProgress, [0.5, 1], isMobile ? [1, 1] : [1, 0.3]);
-  const textBlurPx = useTransform(scrollYProgress, [0.5, 1], isMobile ? [0, 0] : [0, 6]);
+  const textY = useTransform(scrollYProgress, [0, 0.5, 1], [240, 240, -80]);
+  const titleBuildX = useTransform(scrollYProgress, [0, 0.5, 1], [0, -540, -540]);
+  const titleShipX = useTransform(scrollYProgress, [0, 0.5, 1], [0, 540, 540]);
+  const titleScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.44]);
+  const scriptFontSize = useTransform(scrollYProgress, [0, 0.5], [88, 224]);
+  const textOpacity = useTransform(scrollYProgress, [0.5, 1], [1, 0.3]);
+  const textBlurPx = useTransform(scrollYProgress, [0.5, 1], [0, 6]);
   const textFilter = useTransform(textBlurPx, (v) => `blur(${v}px)`);
 
   return (
-    <section ref={sectionRef} className="relative h-[150vh] md:h-[300vh]">
-      <div className="sticky top-0 h-screen">
-        {/* Responsive scale wrapper — CSS only, no JS re-renders */}
+    <section ref={sectionRef} className="relative h-[300vh]">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        {/* Responsive scale wrapper */}
         <div
           className="relative flex h-full w-full items-center justify-center"
           style={{
-            /* Scale entire scene proportionally to viewport width.
-               Designed at 1400px — below that, shrink everything uniformly. */
-            transform: "scale(clamp(0.3, 100vw / 1400, 1))",
+            transform: `scale(${viewportScale})`,
           }}
         >
           {/* Cards layer */}

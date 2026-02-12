@@ -12,17 +12,17 @@ import CountUp from "@/components/CountUp";
 import { V2Footer } from "@/components/v2/v2-footer";
 
 const topRowImages = [
-  { src: "/images/mockup-top-1.png", alt: "Mobile app showcase", w: 208, h: 260, border: "rgba(195,228,165,0.4)" },
-  { src: "/images/mockup-top-2.png", alt: "Fiber connections website", w: 414, h: 260, border: "rgba(72,200,30,0.4)" },
-  { src: "/images/mockup-top-3.png", alt: "Trading platform", w: 375, h: 260, border: "rgba(20,214,218,0.4)" },
-  { src: "/images/mockup-top-4.png", alt: "Analytics dashboard", w: 414, h: 260, border: "rgba(255,255,255,0.4)" },
+  { src: "/images/mockup-top-1.png", alt: "Mobile app showcase", w: 144, h: 180, border: "rgba(195,228,165,0.4)" },
+  { src: "/images/mockup-top-2.png", alt: "Fiber connections website", w: 286, h: 180, border: "rgba(72,200,30,0.4)" },
+  { src: "/images/mockup-top-3.png", alt: "Trading platform", w: 260, h: 180, border: "rgba(20,214,218,0.4)" },
+  { src: "/images/mockup-top-4.png", alt: "Analytics dashboard", w: 286, h: 180, border: "rgba(255,255,255,0.4)" },
 ];
 
 const botRowImages = [
-  { src: "/images/mockup-bot-1.png", alt: "Strive entertainment app", w: 416, h: 260, border: "rgba(141,67,246,0.4)" },
-  { src: "/images/mockup-bot-2.png", alt: "Admin dashboard", w: 347, h: 260, border: "rgba(49,127,167,0.4)" },
-  { src: "/images/mockup-bot-3.png", alt: "Mobile phones showcase", w: 487, h: 260, border: "rgba(207,68,21,0.4)" },
-  { src: "/images/mockup-bot-4.png", alt: "Laptop mockup", w: 390, h: 260, border: "rgba(204,255,0,0.4)" },
+  { src: "/images/mockup-bot-1.png", alt: "Strive entertainment app", w: 288, h: 180, border: "rgba(141,67,246,0.4)" },
+  { src: "/images/mockup-bot-2.png", alt: "Admin dashboard", w: 240, h: 180, border: "rgba(49,127,167,0.4)" },
+  { src: "/images/mockup-bot-3.png", alt: "Mobile phones showcase", w: 337, h: 180, border: "rgba(207,68,21,0.4)" },
+  { src: "/images/mockup-bot-4.png", alt: "Laptop mockup", w: 270, h: 180, border: "rgba(204,255,0,0.4)" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -73,7 +73,7 @@ function MarqueeRow({
   direction?: "left" | "right";
   duration?: number;
 }) {
-  const gap = 48;
+  const gap = 32;
   const animationName = direction === "left" ? "marquee-left" : "marquee-right";
 
   const renderImages = (keyPrefix: string) =>
@@ -84,7 +84,7 @@ function MarqueeRow({
         style={{
           width: img.w,
           height: img.h,
-          border: `8px solid ${img.border}`,
+          border: `5px solid ${img.border}`,
         }}
       >
         <Image
@@ -187,7 +187,7 @@ function MockupShowcase() {
       >
         {/* Top row — absolute at top, slides down from above */}
         <motion.div
-          className="absolute top-0 left-0 right-0 z-10 py-8"
+          className="absolute top-0 left-0 right-0 z-10 py-4"
           style={{ y: topY, opacity: topOpacity }}
         >
           <MarqueeRow images={topRowImages} direction="left" duration={25} />
@@ -251,7 +251,7 @@ function MockupShowcase() {
 
         {/* Bottom row — absolute at bottom, slides up from below */}
         <motion.div
-          className="absolute bottom-0 left-0 right-0 z-10 py-8"
+          className="absolute bottom-0 left-0 right-0 z-10 py-4"
           style={{ y: botY, opacity: botOpacity }}
         >
           <MarqueeRow images={botRowImages} direction="right" duration={30} />
@@ -312,7 +312,7 @@ export function HoursSection() {
                 style={{
                   fontFamily: "var(--font-switzer)",
                   fontWeight: 700,
-                  fontSize: "clamp(120px, 45vw, 648px)",
+                  fontSize: "clamp(80px, 30vw, 648px)",
                   letterSpacing: "-0.15em",
                 }}
               >
@@ -335,7 +335,7 @@ export function HoursSection() {
                   fontFamily: "var(--font-switzer)",
                   fontWeight: 300,
                   fontStyle: "italic",
-                  fontSize: "clamp(48px, 15.5vw, 224px)",
+                  fontSize: "clamp(32px, 10vw, 224px)",
                   letterSpacing: "-0.054em",
                   lineHeight: 1.15,
                 }}
@@ -347,7 +347,7 @@ export function HoursSection() {
                 style={{
                   fontFamily: "var(--font-switzer)",
                   fontWeight: 400,
-                  fontSize: "clamp(14px, 2.8vw, 40px)",
+                  fontSize: "clamp(12px, 2vw, 40px)",
                   lineHeight: 0.9,
                   marginTop: "0.25em",
                 }}

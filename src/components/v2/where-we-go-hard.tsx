@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { useViewportScale } from "@/hooks/use-viewport-scale";
 
 const switzer = "var(--font-switzer)";
 
@@ -52,6 +53,7 @@ function DesktopCards() {
   const floaterRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const rafId = useRef(0);
+  const viewportScale = useViewportScale(1920, { min: 0.4 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const el = floaterRef.current;
@@ -71,6 +73,7 @@ function DesktopCards() {
     <section
       ref={sectionRef}
       className="relative hidden h-[884px] overflow-hidden md:block"
+      style={{ transform: `scale(${viewportScale})`, transformOrigin: "top center" }}
       onMouseMove={handleMouseMove}
     >
       <div className="relative mx-auto h-full w-full max-w-[1440px]">
@@ -248,13 +251,13 @@ export function WhereWeGoHard() {
             fontFamily: switzer,
             fontWeight: 300,
             fontStyle: "italic",
-            fontSize: "clamp(48px, 15.5vw, 224px)",
+            fontSize: "clamp(48px, 11vw, 224px)",
             lineHeight: 0.64,
             letterSpacing: "-0.05em",
             maxWidth: "85vw",
           }}
         >
-          Where we go hard
+          Where we<br /> go hard
         </p>
       </section>
 

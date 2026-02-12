@@ -23,6 +23,7 @@ export function LiquidEtherBg() {
   return (
     <div className="fixed inset-0 z-0">
       <LiquidEther
+        key={isMobile ? "mobile" : "desktop"}
         colors={["#909090", "#000000", "#000000"]}
         mouseForce={isMobile ? 0 : 15}
         cursorSize={120}

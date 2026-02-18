@@ -147,27 +147,38 @@ export function V2Footer() {
         {/* ── Copyright bar ── */}
         <div className="border-t border-[#323232] py-8">
           <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-1">
-              <p
-                className="text-white"
-                style={{ fontFamily: switzer, fontWeight: 400, fontSize: 12, lineHeight: "16px" }}
-              >
-                Nightlatte
-              </p>
-              <p
-                className="text-[#8f9199]"
-                style={{ fontFamily: switzer, fontWeight: 400, fontSize: 12, lineHeight: "19.5px" }}
-              >
-                &copy; 2026 Nightlatte. All rights reserved. Philippines (Remote-first).
-              </p>
-            </div>
-            <Link
-              href="/privacy"
-              className="text-white transition-colors hover:text-white/70"
-              style={{ fontFamily: switzer, fontWeight: 400, fontSize: 12, lineHeight: "16px" }}
+            <p
+              className="text-[#8f9199]"
+              style={{ fontFamily: switzer, fontWeight: 400, fontSize: 12, lineHeight: "19.5px" }}
             >
-              Privacy policy
-            </Link>
+              &copy; 2026 Nightlatte. All rights reserved. Philippines (Remote-first).
+            </p>
+
+            <div className="flex items-center gap-2">
+              <p
+                className="text-[#8f9199] mr-1"
+                style={{ fontFamily: switzer, fontWeight: 400, fontSize: 11 }}
+              >
+                The Team
+              </p>
+              {[
+                { initials: "WL", href: "https://www.warrenlabuan.com" },
+                { initials: "NM", href: "https://www.nathanmuyx.com" },
+                { initials: "CJ", href: "https://christianjohnportfolio.framer.website/" },
+                { initials: "BJ", href: "https://www.behance.net/designs_brylle" },
+              ].map((member) => (
+                <a
+                  key={member.initials}
+                  href={member.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex size-8 items-center justify-center rounded-full border border-[#323232] text-[#8f9199] transition-colors hover:border-white/30 hover:text-white"
+                  style={{ fontFamily: switzer, fontWeight: 500, fontSize: 11 }}
+                >
+                  {member.initials}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>

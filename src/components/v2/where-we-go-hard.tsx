@@ -7,8 +7,6 @@ import { useViewportScale } from "@/hooks/use-viewport-scale";
 
 const switzer = "var(--font-switzer)";
 
-const YOUTUBE_VIDEO_ID = "PdvDt1TCXkg";
-
 const cards = [
   {
     title: "Branding that feels alive",
@@ -18,6 +16,8 @@ const cards = [
     width: 319,
     height: 464,
     thumbnail: "/images/card-apps.png",
+    video: true,
+    videoSrc: "/videos/Branding-that-feels-alive.mp4",
   },
   {
     title: "Web builds at midnight speed",
@@ -46,6 +46,7 @@ const cards = [
     height: 424,
     thumbnail: "/images/mockup-bot-3.png",
     video: true,
+    videoSrc: "/videos/DataConnect.mp4",
   },
 ];
 
@@ -94,7 +95,7 @@ function FloaterPortal({
             {cards[hoveredIndex].video ? (
               <>
                 <video
-                  src="/videos/DataConnect.mp4"
+                  src={cards[hoveredIndex].videoSrc}
                   autoPlay
                   muted
                   loop
@@ -275,18 +276,13 @@ function MobileCards() {
                 <div className="relative h-[240px] w-full">
                   {card.video ? (
                     <>
-                      <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&start=12&loop=1&playlist=${YOUTUBE_VIDEO_ID}&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1`}
-                        className="absolute border-0"
-                        style={{
-                          top: "50%",
-                          left: "50%",
-                          width: "140%",
-                          height: "140%",
-                          transform: "translate(-50%, -50%)",
-                        }}
-                        allow="autoplay; encrypted-media"
-                        title="Motion reel"
+                      <video
+                        src={card.videoSrc}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="absolute inset-0 h-full w-full object-cover"
                       />
                       <div className="absolute inset-0 z-10" />
                     </>

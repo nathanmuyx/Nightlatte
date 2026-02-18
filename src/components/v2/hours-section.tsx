@@ -180,7 +180,7 @@ function MockupShowcase() {
   const botOpacity = useTransform(scrollYProgress, [0.35, 0.55, 1], [0, 1, 1]);
 
   return (
-    <section ref={containerRef} className="relative h-[300vh]">
+    <section id="work" ref={containerRef} className="relative h-[300vh]">
       <motion.div
         className="sticky top-0 h-screen overflow-hidden"
         style={{ backgroundColor: bgColor }}
@@ -360,7 +360,7 @@ export function HoursSection() {
       </section>
 
       {/* ── Body text on white ── */}
-      <section ref={bodyRef} className="relative z-10 bg-white" style={{ marginTop: "-40vh" }}>
+      <section id="about" ref={bodyRef} className="relative z-10 bg-white" style={{ marginTop: "-40vh" }}>
         <motion.div
           className="mx-auto max-w-[1024px] px-6 pt-[10vh] pb-[5vh]"
           style={{ y: bodyY, opacity: bodyOpacity }}

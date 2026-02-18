@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useViewportScale } from "@/hooks/use-viewport-scale";
 
 const switzer = "var(--font-switzer)";
+
+const YOUTUBE_VIDEO_ID = "PdvDt1TCXkg";
 
 const cards = [
   {
@@ -14,7 +17,7 @@ const cards = [
     left: "0.2%",
     width: 319,
     height: 464,
-    thumbnail: "/images/mockup-top-2.png",
+    thumbnail: "/images/card-apps.png",
   },
   {
     title: "Web builds at midnight speed",
@@ -23,7 +26,7 @@ const cards = [
     left: "24%",
     width: 350,
     height: 468,
-    thumbnail: "/images/mockup-top-3.png",
+    thumbnail: "/images/card-branding.png",
   },
   {
     title: "Apps that work hard",
@@ -32,7 +35,7 @@ const cards = [
     left: "50%",
     width: 350,
     height: 450,
-    thumbnail: "/images/mockup-top-1.png",
+    thumbnail: "/images/card-web-builds.png",
   },
   {
     title: "Motion that makes noise",
@@ -42,8 +45,85 @@ const cards = [
     width: 350,
     height: 424,
     thumbnail: "/images/mockup-bot-3.png",
+    video: true,
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/*  Floater rendered via portal so it's never clipped                    */
+/* ------------------------------------------------------------------ */
+function FloaterPortal({
+  hoveredIndex,
+  side,
+  floaterRef,
+}: {
+  hoveredIndex: number | null;
+  side: "left" | "right";
+  floaterRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <div
+      ref={floaterRef}
+      className={`pointer-events-none fixed left-0 top-0 z-[9999] flex flex-col gap-[34px] will-change-transform ${hoveredIndex !== null && hoveredIndex >= 2 ? "items-end" : "items-start"}`}
+      style={{
+        opacity: hoveredIndex !== null ? 1 : 0,
+        transition: "opacity 0.2s ease",
+      }}
+    >
+      {hoveredIndex !== null && (
+        <>
+          <p
+            className="text-white"
+            style={{
+              fontFamily: switzer,
+              fontWeight: 600,
+              fontSize: 48,
+              lineHeight: 0.7,
+              letterSpacing: "-0.05em",
+              maxWidth: 244,
+            }}
+          >
+            {cards[hoveredIndex].title}
+          </p>
+          <div className="relative h-[303px] w-[511px] overflow-hidden rounded-3xl">
+            {cards[hoveredIndex].video ? (
+              <>
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&start=12&loop=1&playlist=${YOUTUBE_VIDEO_ID}&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1`}
+                  className="absolute border-0"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    width: "120%",
+                    height: "120%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  allow="autoplay; encrypted-media"
+                  title="Motion reel"
+                />
+                <div className="absolute inset-0 z-10" />
+              </>
+            ) : (
+              <Image
+                src={cards[hoveredIndex].thumbnail}
+                alt={cards[hoveredIndex].title}
+                fill
+                className="object-cover"
+                sizes="511px"
+              />
+            )}
+          </div>
+        </>
+      )}
+    </div>,
+    document.body
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  Desktop: hover cards with cursor-following floater                  */
@@ -76,98 +156,70 @@ function DesktopCards() {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative hidden h-[884px] overflow-hidden md:block"
-      style={{ transform: `scale(${viewportScale})`, transformOrigin: "top center" }}
-      onMouseMove={handleMouseMove}
-    >
-      <div className="relative mx-auto h-full w-full max-w-[1440px]">
-        {cards.map((card, i) => (
-          <div
-            key={card.title}
-            className="absolute flex flex-col justify-between overflow-hidden rounded-3xl bg-white p-10"
-            style={{
-              top: card.top,
-              left: card.left,
-              width: card.width,
-              height: card.height,
-              opacity:
-                hoveredIndex === null
-                  ? 1
-                  : hoveredIndex === i
-                    ? 0.1
-                    : 0.4,
-              transition: "opacity 0.3s ease",
-            }}
-            onMouseEnter={() => { setHoveredIndex(i); sideRef.current = i >= 2 ? "right" : "left"; }}
-            onMouseLeave={() => setHoveredIndex(null)}
-          >
-            <p
-              className="text-black"
-              style={{
-                fontFamily: switzer,
-                fontWeight: 600,
-                fontSize: 48,
-                lineHeight: 0.7,
-                letterSpacing: "-0.05em",
-              }}
-            >
-              {card.title}
-            </p>
-            <p
-              className="text-black whitespace-pre-wrap"
-              style={{
-                fontFamily: switzer,
-                fontWeight: 500,
-                fontSize: 24,
-                lineHeight: 0.9,
-                letterSpacing: "-0.03em",
-              }}
-            >
-              {card.description}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Floating cursor follower — fixed so it's never clipped by overflow */}
-      <div
-        ref={floaterRef}
-        className={`pointer-events-none fixed left-0 top-0 z-[100] flex flex-col gap-[34px] will-change-transform ${hoveredIndex !== null && hoveredIndex >= 2 ? "items-end" : "items-start"}`}
-        style={{
-          opacity: hoveredIndex !== null ? 1 : 0,
-          transition: "opacity 0.2s ease",
-        }}
+    <>
+      <section
+        ref={sectionRef}
+        className="relative hidden h-[884px] overflow-hidden md:block"
+        style={{ transform: `scale(${viewportScale})`, transformOrigin: "top center" }}
+        onMouseMove={handleMouseMove}
       >
-        {hoveredIndex !== null && (
-          <>
-            <p
-              className="text-white"
+        <div className="relative mx-auto h-full w-full max-w-[1440px]">
+          {cards.map((card, i) => (
+            <div
+              key={card.title}
+              className="absolute flex flex-col justify-between overflow-hidden rounded-3xl bg-white p-10"
               style={{
-                fontFamily: switzer,
-                fontWeight: 600,
-                fontSize: 48,
-                lineHeight: 0.7,
-                letterSpacing: "-0.05em",
-                maxWidth: 244,
+                top: card.top,
+                left: card.left,
+                width: card.width,
+                height: card.height,
+                opacity:
+                  hoveredIndex === null
+                    ? 1
+                    : hoveredIndex === i
+                      ? 0.1
+                      : 0.4,
+                transition: "opacity 0.3s ease",
               }}
+              onMouseEnter={() => { setHoveredIndex(i); sideRef.current = i >= 2 ? "right" : "left"; }}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
-              {cards[hoveredIndex].title}
-            </p>
-            <div className="relative h-[303px] w-[511px] overflow-hidden rounded-3xl">
-              <Image
-                src={cards[hoveredIndex].thumbnail}
-                alt={cards[hoveredIndex].title}
-                fill
-                className="object-cover"
-                sizes="511px"
-              />
+              <p
+                className="text-black"
+                style={{
+                  fontFamily: switzer,
+                  fontWeight: 600,
+                  fontSize: 48,
+                  lineHeight: 0.7,
+                  letterSpacing: "-0.05em",
+                }}
+              >
+                {card.title}
+              </p>
+              <p
+                className="text-black whitespace-pre-wrap"
+                style={{
+                  fontFamily: switzer,
+                  fontWeight: 500,
+                  fontSize: 24,
+                  lineHeight: 0.9,
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                {card.description}
+              </p>
             </div>
-          </>
-        )}
-      </div>
-    </section>
+          ))}
+        </div>
+      </section>
+
+      {/* Floater portalled to body — never clipped by any parent */}
+      <FloaterPortal
+        hoveredIndex={hoveredIndex}
+        side={sideRef.current}
+        floaterRef={floaterRef}
+      />
+    </>
   );
 }
 
@@ -226,13 +278,32 @@ function MobileCards() {
                 }}
               >
                 <div className="relative h-[240px] w-full">
-                  <Image
-                    src={card.thumbnail}
-                    alt={card.title}
-                    fill
-                    className="object-cover"
-                    sizes="100vw"
-                  />
+                  {card.video ? (
+                    <>
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&start=12&loop=1&playlist=${YOUTUBE_VIDEO_ID}&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1`}
+                        className="absolute border-0"
+                        style={{
+                          top: "50%",
+                          left: "50%",
+                          width: "140%",
+                          height: "140%",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                        allow="autoplay; encrypted-media"
+                        title="Motion reel"
+                      />
+                      <div className="absolute inset-0 z-10" />
+                    </>
+                  ) : (
+                    <Image
+                      src={card.thumbnail}
+                      alt={card.title}
+                      fill
+                      className="object-cover"
+                      sizes="100vw"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -248,17 +319,17 @@ function MobileCards() {
 /* ------------------------------------------------------------------ */
 export function WhereWeGoHard() {
   return (
-    <div>
+    <div id="services">
       {/* ── Title section ── */}
-      <section className="relative flex h-[60vh] items-center justify-center overflow-hidden md:h-[100vh]">
+      <section className="relative flex h-auto items-center justify-center py-20 md:py-32">
         <p
-          className="text-center text-white"
+          className="text-center text-white px-6"
           style={{
             fontFamily: switzer,
             fontWeight: 300,
             fontStyle: "italic",
-            fontSize: "clamp(48px, 11vw, 224px)",
-            lineHeight: 0.64,
+            fontSize: "clamp(48px, 11vw, 180px)",
+            lineHeight: 0.85,
             letterSpacing: "-0.05em",
             maxWidth: "85vw",
           }}

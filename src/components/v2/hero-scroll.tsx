@@ -95,7 +95,7 @@ export function HeroScroll() {
   const textFilter = useTransform(textBlurPx, (v) => `blur(${v}px)`);
 
   return (
-    <section ref={sectionRef} className="relative h-[200vh] md:h-[300vh]">
+    <section id="hero" ref={sectionRef} className="relative h-[200vh] md:h-[300vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Responsive scale wrapper */}
         <div

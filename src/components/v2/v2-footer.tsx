@@ -6,13 +6,14 @@ const switzer = "var(--font-switzer)";
 const navLinks = [
   { label: "About", href: "#about" },
   { label: "Services", href: "#services" },
+  { label: "Pricing", href: "#pricing" },
   { label: "Work", href: "#work" },
   { label: "Contact", href: "#contact" },
 ];
 
 export function V2Footer() {
   return (
-    <footer className="bg-black">
+    <footer id="contact" className="bg-black">
       {/* ── Large logo wordmark section ── */}
       <div className="flex flex-col gap-[4vw] pb-[3vw]">
         {/* Pre-cropped arc shapes at top */}

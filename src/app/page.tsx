@@ -1,6 +1,7 @@
 import { HeroScroll } from "@/components/v2/hero-scroll";
 import { HoursSection } from "@/components/v2/hours-section";
 import { LiquidEtherBg } from "@/components/v2/liquid-ether-bg";
+import { PricingSection } from "@/components/v2/pricing-section";
 import { V2Navbar } from "@/components/v2/v2-navbar";
 import { WhereWeGoHard } from "@/components/v2/where-we-go-hard";
 
@@ -12,6 +13,7 @@ export default function HomePage() {
         <V2Navbar />
         <HeroScroll />
         <WhereWeGoHard />
+        <PricingSection />
         <HoursSection />
       </div>
     </>

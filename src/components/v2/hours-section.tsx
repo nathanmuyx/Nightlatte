@@ -25,6 +25,7 @@ const clientLogos = [
   { src: "/images/logos/Niya.svg", alt: "Niya", w: 164 },
   { src: "/images/logos/Taiko.svg", alt: "Taiko", w: 276 },
   { src: "/images/logos/Typid.svg", alt: "Typid", w: 232 },
+  { src: "/images/logos/Turncast.svg", alt: "Turncast", w: 309 },
 ];
 
 const botRowImages = [

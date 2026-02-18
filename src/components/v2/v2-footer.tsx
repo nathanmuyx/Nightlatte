@@ -166,6 +166,7 @@ export function V2Footer() {
                 { initials: "NM", href: "https://www.nathanmuyx.com" },
                 { initials: "CJ", href: "https://christianjohnportfolio.framer.website/" },
                 { initials: "BJ", href: "https://www.behance.net/designs_brylle" },
+                { initials: "AM", href: "https://andrwmuyco.framer.website" },
               ].map((member) => (
                 <a
                   key={member.initials}

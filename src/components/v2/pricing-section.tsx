@@ -89,7 +89,7 @@ export function PricingSection() {
           >
             Websites that launch
             <br />
-            <span style={{ fontFamily: pencerio, fontWeight: 100, fontStyle: "normal" }}>
+            <span style={{ fontFamily: pencerio, fontWeight: 100, fontStyle: "normal", letterSpacing: "0px" }}>
               while others plan
             </span>
           </h2>

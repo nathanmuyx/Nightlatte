@@ -36,6 +36,9 @@ const cards = [
     width: 350,
     height: 450,
     thumbnail: "/images/card-web-builds.png",
+    video: true,
+    videoSrc: "/videos/Showreel-Mobile-screens-remix.mp4",
+    cropBottom: true,
   },
   {
     title: "Motion that makes noise",
@@ -100,7 +103,7 @@ function FloaterPortal({
                   muted
                   loop
                   playsInline
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className={`absolute left-0 top-0 w-full object-cover ${cards[hoveredIndex].cropBottom ? "h-[115%]" : "h-full inset-0"}`}
                 />
                 <div className="absolute inset-0 z-10" />
               </>
@@ -282,7 +285,7 @@ function MobileCards() {
                         muted
                         loop
                         playsInline
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className={`absolute left-0 top-0 w-full object-cover ${card.cropBottom ? "h-[115%]" : "h-full inset-0"}`}
                       />
                       <div className="absolute inset-0 z-10" />
                     </>

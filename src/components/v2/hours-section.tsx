@@ -19,6 +19,14 @@ const topRowImages = [
   { src: "/images/mockup-top-4.png", alt: "Analytics dashboard", w: 286, h: 180, border: "rgba(255,255,255,0.4)" },
 ];
 
+const clientLogos = [
+  { src: "/images/logos/Dataconnect.svg", alt: "Dataconnect", w: 347 },
+  { src: "/images/logos/Maytronics.svg", alt: "Maytronics", w: 281 },
+  { src: "/images/logos/Niya.svg", alt: "Niya", w: 164 },
+  { src: "/images/logos/Taiko.svg", alt: "Taiko", w: 276 },
+  { src: "/images/logos/Typid.svg", alt: "Typid", w: 232 },
+];
+
 const botRowImages = [
   { src: "/images/mockup-bot-1.png", alt: "Strive entertainment app", w: 288, h: 180, border: "rgba(141,67,246,0.4)" },
   { src: "/images/mockup-bot-2.png", alt: "Admin dashboard", w: 240, h: 180, border: "rgba(49,127,167,0.4)" },
@@ -55,8 +63,18 @@ function SpotlightParagraph({
     ]
   );
 
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.35, 0.45, 0.55, 0.65, 1],
+    [0.15, 0.15, 1, 1, 0.15, 0.15]
+  );
+
   return (
-    <motion.div ref={ref} className={className} style={{ color }}>
+    <motion.div
+      ref={ref}
+      className={className}
+      style={{ color, "--spotlight-opacity": opacity } as unknown as React.CSSProperties}
+    >
       {children}
     </motion.div>
   );
@@ -367,7 +385,7 @@ export function HoursSection() {
       {/* ── Body text on white ── */}
       <section id="about" ref={bodyRef} className="relative z-10 bg-white" style={{ marginTop: "-40vh" }}>
         <motion.div
-          className="mx-auto max-w-[1024px] px-6 pt-[10vh] pb-[5vh]"
+          className="mx-auto max-w-[1200px] px-6 pt-[10vh] pb-[5vh]"
           style={{ y: bodyY, opacity: bodyOpacity }}
         >
           <div className="flex flex-col gap-[72px]">
@@ -378,10 +396,11 @@ export function HoursSection() {
                   style={{
                     fontFamily: "var(--font-switzer)",
                     fontWeight: 800,
-                    fontSize: "clamp(24px, 3.9vw, 56px)",
+                    fontSize: "clamp(24px, 3.9vw, 50px)",
                     lineHeight: 1.12,
                     letterSpacing: "-0.04em",
                     color: "inherit",
+                    textWrap: "pretty",
                   }}
                 >
                   <span
@@ -391,7 +410,8 @@ export function HoursSection() {
                       padding: "0.05em 0.15em",
                       boxDecorationBreak: "clone",
                       WebkitBoxDecorationBreak: "clone",
-                    }}
+                      opacity: "var(--spotlight-opacity)",
+                    } as React.CSSProperties}
                   >
                     Design to live websites in 3 days.
                   </span>
@@ -405,6 +425,7 @@ export function HoursSection() {
                     lineHeight: 1.12,
                     letterSpacing: "-0.04em",
                     color: "inherit",
+                    textWrap: "pretty",
                   }}
                 >
                   We build and launch high-converting website landing pages
@@ -423,12 +444,43 @@ export function HoursSection() {
                   lineHeight: 1.12,
                   letterSpacing: "-0.04em",
                   color: "inherit",
+                  textWrap: "pretty",
                 }}
               >
                 Our work has powered real users, and real revenue
                 for ambitious brands. Still, we&rsquo;ve only just crossed the
                 starting line.
               </p>
+            </SpotlightParagraph>
+
+            <SpotlightParagraph>
+              <div className="w-full overflow-hidden">
+                <div
+                  className="flex items-center"
+                  style={{
+                    gap: 64,
+                    animation: "marquee-left 20s linear infinite",
+                    width: "max-content",
+                  }}
+                >
+                  {[...clientLogos, ...clientLogos, ...clientLogos, ...clientLogos].map((logo, i) => (
+                    <Image
+                      key={`${logo.alt}-${i}`}
+                      src={logo.src}
+                      alt={logo.alt}
+                      width={logo.w}
+                      height={72}
+                      className="shrink-0"
+                      style={{
+                        height: 56,
+                        width: "auto",
+                        filter: "brightness(0)",
+                        opacity: "var(--spotlight-opacity)",
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              </div>
             </SpotlightParagraph>
           </div>
         </motion.div>

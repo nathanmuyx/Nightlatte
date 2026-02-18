@@ -27,6 +27,8 @@ const cards = [
     width: 350,
     height: 468,
     thumbnail: "/images/card-branding.png",
+    video: true,
+    videoSrc: "/videos/wesite-typid.webm",
   },
   {
     title: "Apps that work hard",

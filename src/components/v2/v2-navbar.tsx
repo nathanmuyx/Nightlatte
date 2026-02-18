@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CalendlyModal } from "./calendly-modal";
 
 const navLinks = [
   { label: "Services", href: "#services" },
@@ -14,6 +15,7 @@ const navLinks = [
 
 export function V2Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [calendlyOpen, setCalendlyOpen] = useState(false);
 
   const scrollTo = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -70,9 +72,9 @@ export function V2Navbar() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#contact"
-            onClick={(e) => scrollTo(e, "#contact")}
+          <button
+            type="button"
+            onClick={() => setCalendlyOpen(true)}
             className="flex items-center gap-2 rounded-full bg-white px-5 py-2 text-[12px] font-medium uppercase tracking-[-0.34px] text-black transition-colors hover:bg-white/90"
           >
             <span className="relative flex h-2 w-2">
@@ -80,7 +82,7 @@ export function V2Navbar() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
             </span>
             Book a 30-min talk
-          </a>
+          </button>
         </div>
 
         {/* Mobile toggle */}
@@ -117,21 +119,26 @@ export function V2Navbar() {
                   {link.label}
                 </a>
               ))}
-              <a
-                href="#contact"
-                onClick={(e) => scrollTo(e, "#contact")}
-                className="mt-2 flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-lg font-medium uppercase tracking-[-0.34px] text-black transition-colors hover:bg-white/90"
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  setCalendlyOpen(true);
+                }}
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-lg font-medium uppercase tracking-[-0.34px] text-black transition-colors hover:bg-white/90"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
                 Book a 30-min talk
-              </a>
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CalendlyModal open={calendlyOpen} onClose={() => setCalendlyOpen(false)} />
     </header>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import CountUp from "@/components/CountUp";
 import { V2Footer } from "@/components/v2/v2-footer";
+import { CalendlyModal } from "./calendly-modal";
 
 const topRowImages = [
   { src: "/images/mockup-top-1.png", alt: "Mobile app showcase", w: 144, h: 180, border: "rgba(195,228,165,0.4)" },
@@ -121,6 +122,7 @@ function MarqueeRow({
 /* ------------------------------------------------------------------ */
 function MockupShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [calendlyOpen, setCalendlyOpen] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end end"],
@@ -233,9 +235,10 @@ function MockupShowcase() {
             </div>
 
             <motion.div style={{ opacity: ctaOpacity, visibility: ctaVisibility }}>
-              <Link
-                href="#contact"
-                className="rounded-full bg-white px-8 py-5 text-black uppercase"
+              <button
+                type="button"
+                onClick={() => setCalendlyOpen(true)}
+                className="rounded-full bg-white px-8 py-5 text-black uppercase cursor-pointer"
                 style={{
                   fontFamily: "var(--font-switzer)",
                   fontWeight: 500,
@@ -244,7 +247,7 @@ function MockupShowcase() {
                 }}
               >
                 Book a Call
-              </Link>
+              </button>
             </motion.div>
           </div>
         </motion.div>
@@ -257,6 +260,8 @@ function MockupShowcase() {
           <MarqueeRow images={botRowImages} direction="right" duration={30} />
         </motion.div>
       </motion.div>
+
+      <CalendlyModal open={calendlyOpen} onClose={() => setCalendlyOpen(false)} />
     </section>
   );
 }

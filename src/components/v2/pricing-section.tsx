@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { CalendlyModal } from "./calendly-modal";
 
 const switzer = "var(--font-switzer)";
 
@@ -60,12 +61,7 @@ const plans = [
 
 export function PricingSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
-  const scrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const el = document.getElementById("contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
+  const [calendlyOpen, setCalendlyOpen] = useState(false);
 
   return (
     <section id="pricing" className="relative bg-black py-24 md:py-40">
@@ -201,11 +197,11 @@ export function PricingSection() {
               </ul>
 
               {/* CTA */}
-              <a
-                href={plan.href}
-                onClick={scrollToContact}
+              <button
+                type="button"
+                onClick={() => setCalendlyOpen(true)}
                 className={cn(
-                  "block w-full rounded-full py-4 text-center uppercase transition-colors",
+                  "block w-full rounded-full py-4 text-center uppercase transition-colors cursor-pointer",
                   plan.highlight
                     ? "bg-black text-white hover:bg-black/80"
                     : "bg-white text-black hover:bg-white/90"
@@ -218,11 +214,13 @@ export function PricingSection() {
                 }}
               >
                 {plan.cta}
-              </a>
+              </button>
             </div>
           ))}
         </div>
       </div>
+
+      <CalendlyModal open={calendlyOpen} onClose={() => setCalendlyOpen(false)} />
     </section>
   );
 }

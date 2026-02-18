@@ -160,7 +160,7 @@ function DesktopCards() {
     <>
       <section
         ref={sectionRef}
-        className="relative hidden h-[884px] overflow-hidden md:block"
+        className="relative hidden h-[884px] overflow-hidden lg:block"
         style={{ transform: `scale(${viewportScale})`, transformOrigin: "top center" }}
         onMouseMove={handleMouseMove}
       >
@@ -231,7 +231,7 @@ function MobileCards() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <section className="block px-5 pb-16 md:hidden">
+    <section className="block px-5 pb-16 lg:hidden">
       <div className="flex flex-col gap-5">
         {cards.map((card, i) => {
           const isActive = activeIndex === i;

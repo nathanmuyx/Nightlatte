@@ -201,7 +201,7 @@ function MockupShowcase() {
           style={{ y: textY }}
         >
           <div className="flex flex-col items-center gap-[34px]">
-            <div className="flex flex-col items-center gap-[14px]">
+            <div className="flex flex-col items-center gap-0">
               {/* "An impossible deadline?" — visible from start as spotlight */}
               <motion.p
                 className="uppercase text-center"
@@ -226,7 +226,7 @@ function MockupShowcase() {
                   fontFamily: "var(--font-pencerio)",
                   fontWeight: 100,
                   fontSize: "clamp(40px, 6.1vw, 88px)",
-                  lineHeight: 0.9,
+                  lineHeight: 0.7,
                   padding: "0.2em 0.5em 0.3em",
                 }}
               >
@@ -372,21 +372,45 @@ export function HoursSection() {
         >
           <div className="flex flex-col gap-[72px]">
             <SpotlightParagraph>
-              <p
-                className="uppercase w-full"
-                style={{
-                  fontFamily: "var(--font-switzer)",
-                  fontWeight: 500,
-                  fontSize: "clamp(24px, 3.9vw, 56px)",
-                  lineHeight: 1.12,
-                  letterSpacing: "-0.04em",
-                  color: "inherit",
-                }}
-              >
-                We design and build digital products — interfaces, dashboards,
-                and motion that ship fast and scale well. And we own every pixel
-                from Figma to production.
-              </p>
+              <div className="flex flex-col gap-4">
+                <p
+                  className="uppercase w-full"
+                  style={{
+                    fontFamily: "var(--font-switzer)",
+                    fontWeight: 800,
+                    fontSize: "clamp(24px, 3.9vw, 56px)",
+                    lineHeight: 1.12,
+                    letterSpacing: "-0.04em",
+                    color: "inherit",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                      padding: "0.05em 0.15em",
+                      boxDecorationBreak: "clone",
+                      WebkitBoxDecorationBreak: "clone",
+                    }}
+                  >
+                    Design to live websites in 3 days.
+                  </span>
+                </p>
+                <p
+                  className="uppercase w-full"
+                  style={{
+                    fontFamily: "var(--font-switzer)",
+                    fontWeight: 500,
+                    fontSize: "clamp(24px, 3.9vw, 56px)",
+                    lineHeight: 1.12,
+                    letterSpacing: "-0.04em",
+                    color: "inherit",
+                  }}
+                >
+                  We build and launch high-converting website landing pages
+                  — fully live and ready to use.
+                </p>
+              </div>
             </SpotlightParagraph>
 
             <SpotlightParagraph>
@@ -401,7 +425,7 @@ export function HoursSection() {
                   color: "inherit",
                 }}
               >
-                Our work has powered real events, real users, and real revenue
+                Our work has powered real users, and real revenue
                 for ambitious brands. Still, we&rsquo;ve only just crossed the
                 starting line.
               </p>
